@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ComposeDemoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
+                    DemoScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -60,12 +60,36 @@ fun DemoSlider(sliderPosition: Float, onPositionChange:(Float)-> Unit){
     )
 }
 
+@Composable
+fun DemoScreen(modifier: Modifier = Modifier) {
+    var sliderPosition by remember { mutableFloatStateOf(20f) }
+    val handlePositionChange = { position : Float ->
+        sliderPosition = position
+    }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        DemoText(message = "Welcome to Compose", fontSize = sliderPosition)
+        Spacer(modifier = Modifier.height(150.dp))
+        DemoSlider(
+            sliderPosition = sliderPosition,
+            onPositionChange = handlePositionChange
+        )
+        Text(
+            style = MaterialTheme.typography.headlineMedium,
+            text = sliderPosition.toInt().toString() + "sp"
+        )
+    }
+}
 
-
-@Preview
+@Preview(showSystemUi = true)
 @Composable
 fun DemoTextPreview(){
     ComposeDemoTheme {
-        DemoText("Welcome to Android", 12f)
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            DemoScreen(modifier = Modifier.padding(innerPadding))
+        }
     }
 }
